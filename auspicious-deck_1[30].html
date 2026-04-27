@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auspicious — Vision & Values</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --black:#0a0a0a;--white:#ffffff;--pink:#C8449A;--purple:#7B2FBE;
+    --grad:linear-gradient(135deg,#C8449A,#7B2FBE);
+    --grad-soft:linear-gradient(135deg,rgba(200,68,154,0.15),rgba(123,47,190,0.15));
+    --dark:#111111;--mid:#181818;--grey:#888;
+  }
+  body{font-family:'Inter',sans-serif;background:var(--black);color:var(--white);overflow:hidden;height:100vh;}
+  .deck{width:100%;height:100vh;position:relative;}
+  .slide{display:none;position:absolute;inset:0;width:100%;height:100%;padding:52px 76px;flex-direction:column;justify-content:center;}
+  .slide.active{display:flex;}
+
+  /* NAV */
+  nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;z-index:100;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:50px;padding:10px 24px;backdrop-filter:blur(12px);}
+  nav button{background:none;border:none;color:rgba(255,255,255,0.45);font-family:'Inter',sans-serif;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:color .2s;}
+  nav button:hover{color:var(--pink);}
+  .slide-counter{font-size:11px;font-weight:700;letter-spacing:2px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;min-width:52px;text-align:center;}
+  .dot-nav{display:flex;gap:6px;align-items:center;}
+  .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:all .25s;}
+  .dot.active{background:var(--pink);width:20px;border-radius:3px;}
+
+  /* PROGRESS */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:var(--grad);transition:width .4s ease;z-index:200;}
+
+  /* TYPE */
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;display:inline-block;}
+  .h1{font-size:clamp(38px,5.5vw,78px);font-weight:900;line-height:.95;text-transform:uppercase;letter-spacing:-2px;}
+  .h2{font-size:clamp(28px,4vw,56px);font-weight:900;line-height:1.0;text-transform:uppercase;letter-spacing:-1px;}
+  .body{font-size:clamp(13px,1.1vw,15px);font-weight:400;line-height:1.75;color:rgba(255,255,255,0.7);}
+  .grad-text{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+  /* COVER */
+  .slide-cover{background:var(--black);}
+  .cover-orb{position:absolute;border-radius:50%;pointer-events:none;}
+  .orb1{width:500px;height:500px;right:-120px;top:-120px;background:radial-gradient(circle,rgba(200,68,154,0.18) 0%,transparent 70%);}
+  .orb2{width:350px;height:350px;left:-80px;bottom:-80px;background:radial-gradient(circle,rgba(123,47,190,0.14) 0%,transparent 70%);}
+  .cover-pill{display:inline-block;border:1px solid rgba(200,68,154,0.4);padding:5px 16px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:24px;}
+  .cover-rule{width:56px;height:3px;background:var(--grad);border-radius:2px;margin-bottom:24px;}
+  .cover-locs{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:32px;}
+
+  /* DIVIDER */
+  .slide-divider{background:var(--mid);}
+  .slide-divider .inner{border-left:3px solid var(--pink);padding-left:40px;}
+
+  /* FULL GRADIENT */
+  .slide-full-grad{background:var(--grad);}
+  .slide-full-grad .h2{color:#fff;}
+  .slide-full-grad .body{color:rgba(255,255,255,0.85);}
+  .slide-full-grad .eyebrow{background:rgba(255,255,255,0.4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+  /* LAYOUTS */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+
+  /* DELTA LIST */
+  .dl{list-style:none;margin-top:18px;}
+  .dl li{display:flex;gap:14px;margin-bottom:14px;font-size:14px;color:rgba(255,255,255,0.78);line-height:1.55;}
+  .dl li::before{content:'Δ';background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900;flex-shrink:0;font-size:13px;margin-top:1px;}
+
+  /* STATS */
+  .stats-col{display:grid;grid-template-columns:1fr;gap:14px;margin-top:0;}
+  .stat{padding:24px 28px;border-radius:8px;background:var(--grad-soft);border:1px solid rgba(200,68,154,0.2);}
+  .stat-num{font-size:clamp(28px,3.5vw,44px);font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+  .stat-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:6px;}
+
+  /* VALUE CARDS */
+  .val-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px;}
+  .val-card{padding:24px;border-radius:8px;background:var(--mid);border:1px solid rgba(255,255,255,0.07);transition:border-color .2s;}
+  .val-card:hover{border-color:rgba(200,68,154,0.4);}
+  .val-icon{font-size:24px;margin-bottom:10px;}
+  .val-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:8px;}
+  .val-body{font-size:12px;line-height:1.65;color:rgba(255,255,255,0.6);}
+
+  /* PILLARS */
+  .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;}
+  .pillar{padding:22px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--mid);}
+  .pillar-num{font-size:10px;font-weight:800;letter-spacing:3px;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+  .pillar-title{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+  .pillar-body{font-size:12px;line-height:1.6;color:rgba(255,255,255,0.6);}
+
+  /* CREATIVE QUALITY */
+  .cq-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px;}
+  .cq{border-top:3px solid transparent;border-image:var(--grad) 1;padding-top:16px;}
+  .cq-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:8px;}
+  .cq-body{font-size:12px;line-height:1.6;color:rgba(255,255,255,0.58);}
+
+  /* AI CARDS */
+  .ai-cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px;}
+  .ai-card{padding:24px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:var(--mid);}
+  .ai-card.highlight{background:var(--grad-soft);border-color:rgba(200,68,154,0.3);}
+  .ai-title{font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+  .ai-title.pink{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .ai-body{font-size:12px;line-height:1.65;color:rgba(255,255,255,0.65);}
+
+  /* CLOSING */
+  .close-wrap{text-align:center;}
+  .close-big{font-size:clamp(44px,8vw,104px);font-weight:900;text-transform:uppercase;line-height:.9;letter-spacing:-3px;}
+  .close-tag{margin-top:20px;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.4);}
+
+  /* ANIMATIONS */
+  .slide.active .h1,.slide.active .h2,.slide.active .eyebrow,.slide.active .body,
+  .slide.active .cover-pill,.slide.active .cover-rule,.slide.active .val-grid,
+  .slide.active .two-col,.slide.active .pillar-grid,.slide.active .cq-row,
+  .slide.active .ai-cards,.slide.active .dl,.slide.active .inner,
+  .slide.active .close-wrap,.slide.active .stats-col{
+    animation:fadeUp .5s ease both;
+  }
+  .slide.active .h2{animation-delay:.08s;}
+  .slide.active .body{animation-delay:.15s;}
+  .slide.active .val-grid,.slide.active .two-col,.slide.active .pillar-grid,
+  .slide.active .cq-row,.slide.active .ai-cards,.slide.active .dl,
+  .slide.active .inner,.slide.active .stats-col{animation-delay:.22s;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<div class="deck">
+
+  <!-- 1. COVER -->
+  <div class="slide slide-cover active">
+    <div class="cover-orb orb1"></div>
+    <div class="cover-orb orb2"></div>
+    <div class="cover-pill">For Our 50 — 2025 &amp; Beyond</div>
+    <div class="cover-rule"></div>
+    <div class="h1">A <span class="grad-text">Beautiful</span><br>Business.</div>
+    <p class="body" style="max-width:460px;margin-top:20px;">Our shared vision, the values that unite us, and the future we're building together — for our clients, our craft, and each other.</p>
+    <div class="cover-locs">LONDON &nbsp;·&nbsp; NEW YORK &nbsp;·&nbsp; PORTLAND &nbsp;·&nbsp; MANCHESTER</div>
+  </div>
+
+  <!-- 2. WHO WE ARE -->
+  <div class="slide">
+    <div class="eyebrow">Who We Are</div>
+    <div class="h2">Dare To Be<br><span class="grad-text">Different.</span></div>
+    <div class="two-col" style="margin-top:28px;">
+      <div>
+        <p class="body">We are four agencies, one group, and fifty people who believe that in the most disruptive era in human history — creativity, empathy, and human connection are not soft skills. They are the <strong style="color:#fff">ultimate competitive advantage.</strong></p>
+        <p class="body" style="margin-top:16px;">We don't do hollow buzzwords. We do work that matters, for clients who demand the best, with a team that never stops growing.</p>
+      </div>
+      <ul class="dl" style="margin-top:0;">
+        <li>Technology, storytelling &amp; consulting — in service of people</li>
+        <li>Blue-chip clients who trust us to make them look extraordinary</li>
+        <li>A multi-disciplinary group spanning two continents</li>
+        <li>50 people building something genuinely world-class</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 3. PURPOSE -->
+  <div class="slide slide-full-grad">
+    <div class="eyebrow">Our Purpose</div>
+    <div class="h2" style="max-width:800px;">To help our clients navigate the most disruptive period in human history — by keeping humanity at the heart of everything we do.</div>
+    <p class="body" style="margin-top:24px;max-width:560px;">Our technology, our stories, and our ideas exist to amplify human potential. That is our north star. That will never change.</p>
+  </div>
+
+  <!-- 4. THE VISION -->
+  <div class="slide">
+    <div class="eyebrow">Our Vision</div>
+    <div class="h2">The Company<br>of the <span class="grad-text">Future.</span></div>
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pillar-num">Vision 01</div>
+        <div class="pillar-title">Human-Centred</div>
+        <div class="pillar-body">Every product, service, and idea we create keeps the human experience at its core. AI serves people — not the other way around.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">Vision 02</div>
+        <div class="pillar-title">Beautifully Creative</div>
+        <div class="pillar-body">We set the standard for craft. Every piece of work we put into the world should make us proud and make our clients look extraordinary.</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">Vision 03</div>
+        <div class="pillar-title">Fearlessly Growing</div>
+        <div class="pillar-body">A learning culture where every person is growing — in skill, in confidence, and in their ability to shape what comes next.</div>
+      </div>
+    </div>
+    <p class="body" style="margin-top:22px;">We are not just building an agency group. We are building a new kind of creative intelligence — one that is united, purposeful, and always human.</p>
+  </div>
+
+  <!-- 5. VALUES -->
+  <div class="slide">
+    <div class="eyebrow">Our Values</div>
+    <div class="h2">What We<br><span class="grad-text">Stand For.</span></div>
+    <div class="val-grid">
+      <div class="val-card">
+        <div class="val-icon">🤝</div>
+        <div class="val-title">Human First</div>
+        <div class="val-body">We believe every brief, every campaign, every piece of technology should serve a human need. Empathy is baked into everything we make.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-icon">✦</div>
+        <div class="val-title">Creative Excellence</div>
+        <div class="val-body">We don't do average. We obsess over the quality of our work — the thinking, the craft, the detail — because our clients deserve the best version of us.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-icon">🌱</div>
+        <div class="val-title">Relentless Growth</div>
+        <div class="val-body">We are a learning organisation. We share knowledge freely, embrace new tools, and believe that when our people grow, the business grows with them.</div>
+      </div>
+      <div class="val-card">
+        <div class="val-icon">🔗</div>
+        <div class="val-title">One Group</div>
+        <div class="val-body">Four agencies, one team. We win together, support each other across disciplines, and show up as a unified force for every client we work with.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. CREATIVE QUALITY -->
+  <div class="slide">
+    <div class="eyebrow">Our Standard</div>
+    <div class="h2">What Beautiful<br><span class="grad-text">Work Looks Like.</span></div>
+    <p class="body" style="max-width:600px;margin-bottom:4px;">We are an award-winning group because we never settle. Here is what we hold ourselves to — on every brief, every day.</p>
+    <div class="cq-row">
+      <div class="cq">
+        <div class="cq-title">Brave Thinking</div>
+        <div class="cq-body">We bring ideas our clients wouldn't have thought of themselves. The best work always starts with a point of view.</div>
+      </div>
+      <div class="cq">
+        <div class="cq-title">Flawless Craft</div>
+        <div class="cq-body">From the first frame to the final word — every detail is intentional. We don't ship work we're not proud of.</div>
+      </div>
+      <div class="cq">
+        <div class="cq-title">Real Impact</div>
+        <div class="cq-body">Beautiful work should move people and move the needle. We measure success in outcomes, not just outputs.</div>
+      </div>
+      <div class="cq">
+        <div class="cq-title">Genuine Empathy</div>
+        <div class="cq-body">We understand the audiences our clients are speaking to — their hopes, fears, and motivations — before we put pen to paper.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. AI DIVIDER -->
+  <div class="slide slide-divider">
+    <div class="inner">
+      <div class="eyebrow">The Biggest Shift of Our Lifetime</div>
+      <div class="h2">AI is Here.<br>Humanity is <span class="grad-text">Our Edge.</span></div>
+      <p class="body" style="margin-top:20px;max-width:580px;">The world is changing faster than at any point in history. The agencies that will thrive are the ones whose people understand both sides of this shift — and use each to strengthen the other.</p>
+    </div>
+  </div>
+
+  <!-- 8. AI-ENABLED -->
+  <div class="slide">
+    <div class="eyebrow">Our People Strategy</div>
+    <div class="h2">Human-Centred.<br><span class="grad-text">AI-Enabled.</span></div>
+    <div class="ai-cards">
+      <div class="ai-card highlight">
+        <div class="ai-title ai pink">What This Means For You</div>
+        <ul class="dl" style="margin-top:0;">
+          <li>Access to AI tools, training, and hands-on learning from day one</li>
+          <li>Time protected for development — learning is part of the job</li>
+          <li>A culture where curiosity is celebrated and experimentation is encouraged</li>
+          <li>The chance to shape how AI is used at Auspicious — not just receive it</li>
+        </ul>
+      </div>
+      <div class="ai-card">
+        <div class="ai-title">Our Commitment</div>
+        <p class="ai-body" style="margin-bottom:14px;">AI will never replace the human insight, creative instinct, and emotional intelligence that makes Auspicious work special. What it will do is give every one of you more time to do the work that only you can do.</p>
+        <p class="ai-body">We are investing in becoming an <strong style="color:#fff">AI-Native</strong> organisation — not to automate people out, but to amplify every person in this room.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. LEARNING CULTURE -->
+  <div class="slide">
+    <div class="eyebrow">Our Learning Culture</div>
+    <div class="h2">Grow Every<br><span class="grad-text">Single Day.</span></div>
+    <div class="two-col" style="margin-top:24px;">
+      <div>
+        <p class="body">We are building a business where learning never stops. Whether you're sharpening your craft, expanding into AI, or developing as a leader — Auspicious is the place that invests in you.</p>
+        <ul class="dl">
+          <li>Skills development programmes across all disciplines</li>
+          <li>AI fluency training — tailored to your role</li>
+          <li>Mentorship and cross-agency collaboration</li>
+          <li>Clear pathways to grow your career inside the group</li>
+        </ul>
+      </div>
+      <div>
+        <div style="padding:24px 26px;border-radius:8px;background:var(--grad-soft);border:1px solid rgba(200,68,154,0.25);">
+          <div class="val-title" style="font-size:11px;margin-bottom:10px;">Learn Like a Lobster</div>
+          <p class="ai-body">A lobster only grows by shedding its shell — making itself vulnerable in order to become something bigger. That's the mindset we bring to growth. We embrace change, step into discomfort, and emerge stronger for it. Every time.</p>
+        </div>
+        <div style="margin-top:14px;padding:18px 26px;border-radius:8px;background:var(--mid);border:1px solid rgba(255,255,255,0.07);">
+          <div class="val-title" style="font-size:11px;margin-bottom:8px;">The Auspicious Community</div>
+          <p class="ai-body">A high-trust network of collaborators, advisors, and peers — learning from each other, sharing what works, and building something none of us could build alone.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. YEAR AHEAD -->
+  <div class="slide">
+    <div class="eyebrow">The Next 12 Months</div>
+    <div class="h2">Our Focus.<br><span class="grad-text">Our Moment.</span></div>
+    <div class="two-col" style="margin-top:24px;">
+      <ul class="dl" style="margin-top:0;">
+        <li><strong style="color:#fff">Clients first.</strong> Obsess over their outcomes. Become genuinely indispensable to the best brands in the world.</li>
+        <li><strong style="color:#fff">Creative standards up.</strong> Raise the bar on every brief. Make work that wins awards and changes minds.</li>
+        <li><strong style="color:#fff">Smarter, together.</strong> Embed AI into our workflows so we work faster, think bigger, and deliver more.</li>
+        <li><strong style="color:#fff">Grow the group.</strong> Bring in the right partners and clients to build something that is truly world-class.</li>
+      </ul>
+      <div class="stats-col">
+        <div class="stat">
+          <div class="stat-num">50</div>
+          <div class="stat-label">People. One Vision.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">4</div>
+          <div class="stat-label">Agencies. One Group.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Potential to grow.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. DESTINATION -->
+  <div class="slide">
+    <div class="eyebrow">The Destination</div>
+    <div class="h2" style="max-width:780px;">A More <span class="grad-text">Human</span><br>Future. For All.</div>
+    <p class="body" style="margin-top:20px;max-width:660px;">That is what we are really building towards. Not a number on a spreadsheet — but the knowledge that we played our part, however small, in keeping humanity at the centre of the most disruptive period in human history.</p>
+    <ul class="dl" style="margin-top:20px;max-width:580px;">
+      <li>That we helped avoid a lost generation — one left behind by technology, by change, by speed</li>
+      <li>That our work put people first, even when the world was pushing in the other direction</li>
+      <li>That the clients we served, the stories we told, and the tools we built made lives genuinely better</li>
+      <li>That when it mattered most, we were on the right side of history</li>
+    </ul>
+  </div>
+
+  <!-- 12. CLOSING -->
+  <div class="slide">
+    <div class="close-wrap">
+      <div class="close-big">This Is<br><span class="grad-text">Our Time.</span></div>
+      <p class="body" style="max-width:500px;margin:28px auto 0;text-align:center;font-size:15px;">Every one of you is the reason Auspicious exists. The talent in this room is the most important asset we have. Let's go build something beautiful.</p>
+      <div class="close-tag" style="margin-top:28px;">London · New York · Portland · Manchester</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAV -->
+<nav>
+  <button onclick="changeSlide(-1)">← Prev</button>
+  <div class="dot-nav" id="dots"></div>
+  <span class="slide-counter" id="counter">1 / 12</span>
+  <button onclick="changeSlide(1)">Next →</button>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let cur = 0;
+  const dotsEl = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const prog = document.getElementById('progress');
+
+  slides.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.className='dot'+(i===0?' active':'');
+    d.onclick=()=>goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n){
+    slides[cur].classList.remove('active');
+    cur=(n+total)%total;
+    slides[cur].classList.add('active');
+    document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+    counter.textContent=`${cur+1} / ${total}`;
+    prog.style.width=`${((cur+1)/total)*100}%`;
+  }
+  function changeSlide(d){goTo(cur+d);}
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown')changeSlide(1);
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')changeSlide(-1);
+  });
+  prog.style.width=`${(1/total)*100}%`;
+</script>
+</body>
+</html>
